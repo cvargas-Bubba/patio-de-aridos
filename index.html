@@ -98,8 +98,12 @@ main { padding-block: 8px 64px; }
 .btn.block { width: 100%; padding: 12px; font-size: 1rem; }
 
 /* Client shop */
-.shop { display: grid; grid-template-columns: minmax(0, 1fr) 370px; gap: 24px; align-items: start; }
-.col { display: flex; flex-direction: column; gap: 28px; min-width: 0; }
+.shop { display: grid; grid-template-columns: minmax(0, 1fr) 370px; grid-template-areas: "main side" "form side"; gap: 28px 24px; align-items: start; }
+.col { grid-area: main; display: flex; flex-direction: column; gap: 28px; min-width: 0; }
+.shop > .cart { grid-area: side; }
+.shop > .entrega { grid-area: form; }
+.cart { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 90px); }
+.mbar, .ag-list, .m-only { display: none; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
 .mat { display: flex; flex-direction: column; overflow: hidden; }
 .mat.off { opacity: .6; }
@@ -215,12 +219,18 @@ tr.is-new td:first-child { box-shadow: inset 4px 0 0 var(--warn); }
 .slot b { font-size: .82rem; }
 .slot .pill { font-size: .7rem; align-self: flex-start; }
 .over { font-size: .74rem; color: var(--bad); font-weight: 600; }
-.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: .85rem; color: var(--muted); padding: 12px 14px; border-top: 1px solid var(--line); }
+.legend { display: flex; gap: 8px 16px; flex-wrap: wrap; font-size: .85rem; color: var(--muted); padding: 12px 4px; }
+.legend span { display: inline-flex; gap: 8px; align-items: center; }
+.ag-day { padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.ag-day.today { border-color: var(--accent); }
+.ag-day-h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.ag-day-h b { text-transform: capitalize; }
+.ag-day-h b small { text-transform: none; font-weight: 400; }
 
 #toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(24px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--bg); padding: 12px 18px; border-radius: 10px; font-weight: 600; z-index: 20; box-shadow: 0 8px 24px rgba(0,0,0,.25); max-width: calc(100% - 32px); }
 
 @media (max-width: 960px) {
-  .shop { grid-template-columns: minmax(0, 1fr); }
+  .shop { grid-template-columns: minmax(0, 1fr); grid-template-areas: "main" "side" "form"; }
   .cart { position: static; }
   .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -230,6 +240,75 @@ tr.is-new td:first-child { box-shadow: inset 4px 0 0 var(--warn); }
   .form-grid > * { grid-column: 1 / -1; }
   .brand small { display: none; }
   .seg button { padding: 7px 12px; }
+}
+/* Celular: catálogo en filas compactas, barra de total fija abajo y tablas convertidas en tarjetas */
+@media (max-width: 720px) {
+  .top-in { padding-block: 8px; gap: 10px; flex-wrap: nowrap; }
+  .brand { gap: 8px; }
+  .brand svg { width: 30px; height: 26px; }
+  .brand b { font-size: 1rem; }
+  .seg button { padding: 7px 11px; font-size: .88rem; }
+  .demo { font-size: .76rem; padding-block: 8px; line-height: 1.35; }
+  .tabs { margin-bottom: 14px; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar, .chips::-webkit-scrollbar { display: none; }
+  h2 { font-size: 1.2rem; }
+  .shop { gap: 18px; }
+  .col { gap: 18px; }
+  .sec-head { margin-bottom: 10px; }
+  .grid { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .mat { flex-direction: row; }
+  .mat .grain { width: 72px; height: auto; flex: none; }
+  .mat-b { padding: 10px 12px; gap: 1px; min-width: 0; }
+  .mat-b p { font-size: .8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mat-f { margin-top: 4px; }
+  .price b { font-size: 1.05rem; }
+  .step button { width: 40px; height: 40px; }
+  .step span { min-width: 54px; }
+  .mat-f .btn.sm { padding: 10px 16px; font-size: .9rem; }
+  .f input, .f select, .f textarea, .acts select, .price-in { font-size: 16px; }
+  .f input, .f select, .f textarea { padding: 11px 12px; }
+  .calc, .entrega, .cart, .order { padding: 16px; }
+  .calc-out b { font-size: 1.3rem; }
+  .calc-out .btn { width: 100%; padding: 12px; }
+  .x { padding: 8px 10px; }
+  main.has-bar { padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)); }
+  .mbar { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 8; align-items: center; justify-content: space-between; gap: 12px;
+    background: var(--surface); border-top: 1px solid var(--line); box-shadow: 0 -6px 20px rgba(0,0,0,.10);
+    padding-top: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .mbar small { display: block; font-size: .78rem; color: var(--muted); }
+  .mbar b { font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .mbar .btn { padding: 12px 20px; text-decoration: none; }
+  .track div { font-size: .72rem; }
+
+  .kpis { gap: 8px; margin-bottom: 14px; }
+  .kpi { padding: 10px 12px; }
+  .kpi span { font-size: .7rem; }
+  .kpi b { font-size: 1.3rem; }
+  .kpi small { font-size: .74rem; }
+  .chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .chip { white-space: nowrap; padding: 8px 13px; }
+  .m-only { display: inline-flex; }
+  .d-only { display: none !important; }
+  .stack { background: transparent; border: 0; overflow: visible; }
+  .stack table, .stack tbody { display: block; }
+  .stack thead { display: none; }
+  .stack tr { display: flex; flex-direction: column; gap: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; margin-bottom: 10px; }
+  .stack tr.is-new { border-color: var(--warn); }
+  .stack tr.is-new td:first-child { box-shadow: none; }
+  .stack td { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 10px; padding: 0; border: 0; }
+  .stack td.num { text-align: left; }
+  .stack td::before { content: attr(data-l); font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 600; padding-top: 3px; }
+  .stack td:not([data-l]) { display: block; }
+  .stack td:not([data-l])::before { content: none; }
+  .stack td.head { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 1rem; }
+  .stack td.head b { font-size: 1.02rem; }
+  .stack .acts { padding-top: 4px; }
+  .stack .acts .btn, .stack .acts select { flex: 1 1 auto; padding: 10px 12px; font-size: .92rem; }
+  .stack .acts select { flex-basis: 100%; }
+  .stack .price-in { width: 100%; max-width: 160px; text-align: left; }
+  .ag-grid { display: none; }
+  .ag-list { display: flex; flex-direction: column; gap: 10px; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .btn, .chip, .seg button { transition: background-color .15s, filter .15s; }
@@ -341,6 +420,7 @@ function render() {
     <button data-act="role" data-v="cliente" aria-pressed="${S.role === 'cliente'}">Cliente</button>
     <button data-act="role" data-v="vendedor" aria-pressed="${S.role === 'vendedor'}">Vendedor${nuevos ? ` <span class="badge">${nuevos}</span>` : ''}</button>`;
   app.innerHTML = S.role === 'cliente' ? clientView() : vendorView();
+  app.classList.toggle('has-bar', !!app.querySelector('.mbar'));
   updateCalc();
 }
 
@@ -364,10 +444,11 @@ function shopView() {
         <div class="grid">${S.products.map(card).join('')}</div>
       </section>
       ${calcView()}
-      ${deliveryForm(q)}
     </div>
     ${cartView(q)}
-  </div>`;
+    ${deliveryForm(q)}
+  </div>
+  ${q.lines.length ? `<div class="mbar"><div><small>${m3(q.vol)} · ${q.trips} ${q.trips === 1 ? 'viaje' : 'viajes'} · con IVA</small><b>${clp.format(q.total)}</b></div><a class="btn pri" href="#pedido">Ver pedido</a></div>` : ''}`;
 }
 
 function card(p) {
@@ -413,7 +494,7 @@ function cartView(q) {
   const empty = !q.lines.length;
   const loads = [];
   for (let i = 0; i < q.trips; i++) { const fill = Math.min(1, Math.max(0, (q.vol - i * q.cap) / q.cap)); loads.push(`<div class="load"><i style="width:${Math.round(fill * 100)}%"></i></div>`); }
-  return `<aside class="card cart" aria-labelledby="cartT">
+  return `<aside class="card cart" id="pedido" aria-labelledby="cartT">
     <h2 id="cartT">Tu pedido</h2>
     ${empty ? '<p class="cart-empty">Aún no agregas materiales. Elige uno del catálogo o calcula cuánto necesitas.</p>' : `
     <div class="lines">${q.lines.map(l => `<div class="line"><span class="dot" style="${sw(l.p)}"></span><span>${esc(l.p.name)} <small>· ${m3(l.q)}</small></span><span class="num">${clp.format(l.sub)}</span><button class="x" data-act="rm" data-id="${l.p.id}" aria-label="Quitar ${esc(l.p.name)}">×</button></div>`).join('')}</div>`}
@@ -500,7 +581,7 @@ function ordersTable() {
   const filters = { todos: 'Todos', nuevo: 'Por confirmar', confirmado: 'Confirmados', en_ruta: 'En ruta', entregado: 'Entregados' };
   const rows = S.orders.filter(o => S.vfilter === 'todos' || o.status === S.vfilter).sort((a, b) => (a.date + a.block).localeCompare(b.date + b.block));
   return `<div class="chips">${Object.entries(filters).map(([k, v]) => `<button class="chip" data-act="vfilter" data-v="${k}" aria-pressed="${S.vfilter === k}">${v}</button>`).join('')}</div>
-  <div class="card tbl-wrap"><table>
+  <div class="card tbl-wrap stack"><table>
     <thead><tr><th>N°</th><th>Cliente</th><th>Entrega</th><th>Materiales</th><th class="num">Total</th><th>Pago</th><th>Estado</th><th>Acciones</th></tr></thead>
     <tbody>${rows.length ? rows.map(orderRow).join('') : '<tr><td colspan="8" class="muted">No hay pedidos con este filtro.</td></tr>'}</tbody>
   </table></div>`;
@@ -513,14 +594,14 @@ function orderRow(o) {
   if (!o.paid && o.status !== 'cancelado') acts += `<button class="btn sm ghost" data-act="paid" data-id="${o.id}">Registrar pago</button>`;
   const t = truck(o.truck);
   return `<tr class="${o.status === 'nuevo' ? 'is-new' : ''}">
-    <td class="mono">#${o.id}</td>
-    <td><b>${esc(o.name)}</b><small>${esc(o.phone)}</small><small>${esc(o.address)} · ${zone(o.zone).name.split(' · ')[0]}</small></td>
-    <td>${fmtDay(o.date)}<small>${o.block === 'am' ? 'Mañana' : 'Tarde'}</small><small>${ACCESS[o.access].split(',')[0]}</small></td>
-    <td>${o.q.lines.map(l => `${esc(l.p.name)} ${m3(l.q)}`).join('<br>')}<small>${o.q.trips} × tolva ${o.q.cap} m³${t ? ' · ' + t.plate : ''}</small></td>
-    <td class="num"><b>${clp.format(o.q.total)}</b><small>flete ${clp.format(o.q.flete)}</small></td>
-    <td><span class="pill ${o.paid ? 'p-pagado' : 'p-pend'}">${o.paid ? 'Pagado' : 'Pendiente'}</span><small>${PAY[o.pay]}</small></td>
-    <td><span class="pill p-${o.status}">${STATUS[o.status]}</span></td>
-    <td><div class="acts">${acts || '<span class="muted">—</span>'}</div></td>
+    <td class="mono head"><span>#${o.id}</span><span class="pill p-${o.status} m-only">${STATUS[o.status]}</span></td>
+    <td data-l="Cliente"><span><b>${esc(o.name)}</b><small>${esc(o.phone)}</small><small>${esc(o.address)} · ${zone(o.zone).name.split(' · ')[0]}</small></span></td>
+    <td data-l="Entrega"><span>${fmtDay(o.date)}<small>${o.block === 'am' ? 'Mañana' : 'Tarde'}</small><small>${ACCESS[o.access].split(',')[0]}</small></span></td>
+    <td data-l="Material"><span>${o.q.lines.map(l => `${esc(l.p.name)} ${m3(l.q)}`).join('<br>')}<small>${o.q.trips} × tolva ${o.q.cap} m³${t ? ' · ' + t.plate : ''}</small></span></td>
+    <td class="num" data-l="Total"><span><b>${clp.format(o.q.total)}</b><small>flete ${clp.format(o.q.flete)}</small></span></td>
+    <td data-l="Pago"><span><span class="pill ${o.paid ? 'p-pagado' : 'p-pend'}">${o.paid ? 'Pagado' : 'Pendiente'}</span><small>${PAY[o.pay]}</small></span></td>
+    <td class="d-only"><span class="pill p-${o.status}">${STATUS[o.status]}</span></td>
+    <td${acts ? '' : ' class="d-only"'}><div class="acts">${acts || '<span class="muted">—</span>'}</div></td>
   </tr>`;
 }
 
@@ -540,19 +621,28 @@ function agendaView() {
         ${trips > TRUCKS.length ? `<span class="over">${trips} viajes y solo hay ${TRUCKS.length} camiones</span>` : ''}</div>`;
     }).join('');
   }
-  return `<div class="card"><div class="tbl-wrap"><div class="agenda">${html}</div></div>
-    <div class="legend">${TRUCKS.map(t => `<span>${truckSvg()} ${t.name} · ${t.plate} · ${t.driver}</span>`).join('')}</div></div>`;
+  const byDay = days.map((d, i) => {
+    const list = live.filter(o => o.date === d).sort((a, b) => a.block.localeCompare(b.block));
+    const vol = list.reduce((s, o) => s + o.q.vol, 0);
+    return `<section class="card ag-day${i === 0 ? ' today' : ''}">
+      <div class="ag-day-h"><b>${i === 0 ? 'Hoy' : fmtDay(d, { weekday: 'long' })} <small>${fmtDay(d, { day: 'numeric', month: 'short' })}</small></b><small>${list.length ? m3(vol) : ''}</small></div>
+      ${list.length ? list.map(o => `<div class="slot"><b>${o.block === 'am' ? 'Mañana' : 'Tarde'} · #${o.id} · ${esc(o.name)}</b><span>${o.q.lines.map(l => `${esc(l.p.name)} ${m3(l.q)}`).join(', ')} · ${truck(o.truck) ? truck(o.truck).plate : 'sin camión'}</span><span class="pill p-${o.status}">${STATUS[o.status]}</span></div>`).join('') : '<small>Sin despachos</small>'}
+    </section>`;
+  }).join('');
+  return `<div class="card ag-grid"><div class="tbl-wrap"><div class="agenda">${html}</div></div></div>
+    <div class="ag-list">${byDay}</div>
+    <div class="legend">${TRUCKS.map(t => `<span>${truckSvg()} ${t.name} · ${t.plate} · ${t.driver}</span>`).join('')}</div>`;
 }
 
 function productsView() {
   return `<p class="muted" style="margin-bottom:12px">Los cambios de precio y stock se ven al instante en la vista del cliente.</p>
-  <div class="card tbl-wrap"><table>
+  <div class="card tbl-wrap stack"><table>
     <thead><tr><th></th><th>Material</th><th>Uso</th><th class="num">Precio neto /m³</th><th>Stock</th></tr></thead>
     <tbody>${S.products.map(p => `<tr>
-      <td><div class="grain sw ${p.g}" style="${sw(p)}"></div></td>
-      <td><b>${esc(p.name)}</b></td><td class="muted">${esc(p.use)}</td>
-      <td class="num"><input class="price-in" id="pr-${p.id}" type="number" min="0" step="100" value="${p.price}" data-act-change="price" data-id="${p.id}" aria-label="Precio de ${esc(p.name)}"></td>
-      <td><label class="toggle"><input type="checkbox" id="st-${p.id}" data-act-change="stock" data-id="${p.id}"${p.stock ? ' checked' : ''}> ${p.stock ? 'Disponible' : 'Sin stock'}</label></td>
+      <td class="d-only"><div class="grain sw ${p.g}" style="${sw(p)}"></div></td>
+      <td class="head"><b>${esc(p.name)}</b><span class="grain sw m-only ${p.g}" style="${sw(p)};width:28px;height:28px"></span></td><td class="muted d-only">${esc(p.use)}</td>
+      <td class="num" data-l="Precio /m³"><input class="price-in" id="pr-${p.id}" type="number" min="0" step="100" value="${p.price}" data-act-change="price" data-id="${p.id}" aria-label="Precio de ${esc(p.name)}"></td>
+      <td data-l="Stock"><label class="toggle"><input type="checkbox" id="st-${p.id}" data-act-change="stock" data-id="${p.id}"${p.stock ? ' checked' : ''}> ${p.stock ? 'Disponible' : 'Sin stock'}</label></td>
     </tr>`).join('')}</tbody></table></div>`;
 }
 
@@ -564,9 +654,9 @@ function clientsView() {
     map.set(o.name, c);
   }
   const list = [...map.values()].sort((a, b) => b.total - a.total);
-  return `<div class="card tbl-wrap"><table>
+  return `<div class="card tbl-wrap stack"><table>
     <thead><tr><th>Cliente</th><th>Teléfono</th><th class="num">Pedidos</th><th class="num">Volumen</th><th class="num">Compras</th><th>Última entrega</th></tr></thead>
-    <tbody>${list.map(c => `<tr><td><b>${esc(c.name)}</b></td><td class="mono">${esc(c.phone)}</td><td class="num">${c.n}</td><td class="num">${m3(c.vol)}</td><td class="num"><b>${clp.format(c.total)}</b></td><td>${fmtDay(c.last, { day: 'numeric', month: 'long' })}</td></tr>`).join('')}</tbody>
+    <tbody>${list.map(c => `<tr><td class="head"><b>${esc(c.name)}</b></td><td class="mono" data-l="Teléfono">${esc(c.phone)}</td><td class="num" data-l="Pedidos">${c.n}</td><td class="num" data-l="Volumen">${m3(c.vol)}</td><td class="num" data-l="Compras"><b>${clp.format(c.total)}</b></td><td data-l="Última entrega">${fmtDay(c.last, { day: 'numeric', month: 'long' })}</td></tr>`).join('')}</tbody>
   </table></div>`;
 }
 
